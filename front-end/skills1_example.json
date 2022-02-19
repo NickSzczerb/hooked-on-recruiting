@@ -1,0 +1,17 @@
+{
+  "jobtitle1": "Project Manager",
+  "startdate1": "2021-10-01 00:10:00",
+  "skills1_job_1": [
+    ".NET",
+    5
+  ],
+  "skills2_job_1": [
+    "Algorithms",
+    3
+  ],
+  "skills3_job_1": [
+    "Python",
+    3
+  ],
+  "job_desc_1": "Used my experience in Data Engineering to create end-to-end products that collect, transform, and visualize data without any manual intervention.\n\nSupported studies in various industries, working mostly on Sentiment Analysis, A/B testing, and statistical analyses through interactive dashboards.\n\nAs a Technical Team Lead, I had several responsibilities including designing solutions, managing products, project management, and operations optimizations."
+}
