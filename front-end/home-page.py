@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 import pandas as pd
 import numpy as np
+import json
 
 max_date = datetime.today()
 skill_list = [
@@ -45,10 +46,6 @@ date1 = columns1[1].date_input("Start Date",
 date1 = date1.strftime('%Y-%m-%d %H:%m:%S')
 
 skills1 = st.multiselect('Choose your Top 3 skills',skill_list)
-
-#d = st.date_input("Pick a date", datetime.today(), min_value=min_date)
-#new_format = d.strftime('%Y-%m-%d %H:%m:%S')
-
 
 def skillsparse(value,i):
     try:
@@ -94,8 +91,9 @@ def save_data():
         title1,
         "startdate1":
         date1,
-        'skills_job_1': [(skills1[0], skill_1), (skills1[1], skill_2),
-                         (skills1[2], skill_3)],
+        'skills1_job_1': (skills1[0], skill_1),
+        'skills2_job_1':(skills1[1], skill_2),
+        'skills3_job_1':(skills1[2], skill_3),
         'job_desc_1': txt1
     }
     return currentjob
@@ -115,11 +113,11 @@ elif button1 and len(skills1) < 3:
 elif button1 and len(txt1)<100:
     st.error(f"{len(txt1)} characters. Please fill out minimum 100 characters for your experience")
 elif button1 and len(skills1) >= 3:
-    # print is visible in the server output, not in the page
     currentjob = click_validation()
     st.success("data saved!")
     """# TESTING
     should have all datapoints in JSON"""
+    #json.dumps(currentjob,indent=4)
     currentjob
 else:
     st.info('Click here to save your info')

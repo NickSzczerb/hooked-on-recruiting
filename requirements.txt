@@ -30,3 +30,4 @@ termcolor
 streamlit
 datetime
 requests
+json
