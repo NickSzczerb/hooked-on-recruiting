@@ -1,3 +1,4 @@
+from ctypes import alignment
 from unicodedata import name
 import streamlit as st
 from datetime import datetime
@@ -27,9 +28,10 @@ skill_list = [
     'Virtualization', 'VMware', 'Vue.js', 'Web Services'
 ]
 
-'''
-# Hooked On Recruiting
-'''
+
+st.image('front-end/logo1.png')
+
+'''### Fill in your details below'''
 
 columns = st.columns(3)
 email = columns[0].text_input("Email", value="")
@@ -108,16 +110,22 @@ button1 = st.button('Click to save')
 
 if button1 and "@" not in email:
     st.error("please enter a valid email")
+elif button1 and len(title1)<1:
+    st.error("please input your job title")
 elif button1 and len(skills1) < 3:
     st.error("please choose 3 skills")
 elif button1 and len(txt1)<100:
-    st.error(f"{len(txt1)} characters. Please fill out minimum 100 characters for your experience")
+    st.error(
+        f"Please fill out minimum 100 characters for your experience. {len(txt1)}/100 characters filled."
+    )
 elif button1 and len(skills1) >= 3:
     currentjob = click_validation()
     st.success("data saved!")
-    """# TESTING
-    should have all datapoints in JSON"""
+    """# TESTING"""
     #json.dumps(currentjob,indent=4)
+    '''#### Demographics'''
+    demographics
+    '''#### Skills'''
     currentjob
 else:
     st.info('Click here to save your info')
