@@ -29,7 +29,9 @@ skill_list = [
 ]
 
 
-st.image('front-end/logo1.png')
+#st.image('front-end/logo1.png')
+
+'''# Hooked on Recruiting'''
 
 '''### Fill in your details below'''
 
