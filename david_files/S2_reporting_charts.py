@@ -2,15 +2,14 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 from fpdf import FPDF
-import base64
 from tempfile import NamedTemporaryFile
 
 
 
 def radar_chart():
     data = {
-        'skills': ['C#','PySpark','Html','.Net','Pandas'],
-        'proficiency' : [float(4), float(8.5), float(5), float(7), float(8.5)]
+        'skills': ['C#','PySpark','Html'],#,'.Net','Pandas'],
+        'proficiency' : [float(4), float(8.5), float(5)]#, float(7), float(8.5)]
     }
      
     df = pd.DataFrame(data)

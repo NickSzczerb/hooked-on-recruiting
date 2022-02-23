@@ -1,11 +1,13 @@
 from ctypes import alignment
 from unicodedata import name
+from matplotlib import rc
 import streamlit as st
 from datetime import datetime
 import requests
 import pandas as pd
 import numpy as np
 import json
+from reporting_charts import save_pdf, radar_chart
 
 max_date = datetime.today()
 skill_list = [
@@ -68,19 +70,19 @@ help_text = ('''Rating Descriptions:
 - *5-Expert (I can teach others about this skill*''')
 
 
-skill_1 = columnsSkills[0].slider(f'{skillsparse(skills1,0)}', 1, 5, 3,help=help_text)
-skill_2 = columnsSkills[1].slider(f'{skillsparse(skills1,1)}',
+skill_rating_1 = columnsSkills[0].slider(f'{skillsparse(skills1,0)}', 1, 10, 3,help=help_text)
+skill_rating_2 = columnsSkills[1].slider(f'{skillsparse(skills1,1)}',
                                   1,
-                                  5,
+                                  10,
                                   3,
                                   help=help_text)
-skill_3 = columnsSkills[2].slider(f'{skillsparse(skills1,2)}',
+skill_rating_3 = columnsSkills[2].slider(f'{skillsparse(skills1,2)}',
                                   1,
-                                  5,
+                                  10,
                                   3,
                                   help=help_text)
 
-txt1 = st.text_area('What were your main responsibilities and accomplishments in this role?')
+txt_responsibilities = st.text_area('What were your main responsibilities and accomplishments in this role?')
 
 demographics = {"email": email,
                 'name': full_name,
@@ -91,14 +93,15 @@ demographics = {"email": email,
 @st.cache
 def save_data():
     currentjob = {
-        "jobtitle1":
-        title1,
-        "startdate1":
-        date1,
-        'skills1_job_1': (skills1[0], skill_1),
-        'skills2_job_1':(skills1[1], skill_2),
-        'skills3_job_1':(skills1[2], skill_3),
-        'job_desc_1': txt1
+        "job_title": title1,
+        "start_date":date1,
+        "skills":
+         {   
+            skills1[0]: float(skill_rating_1),
+            skills1[1]: float(skill_rating_2),
+            skills1[2]: float(skill_rating_3),
+         },  
+        'job_desc': txt_responsibilities
     }
     return currentjob
 
@@ -108,29 +111,35 @@ def click_validation():
     else:
         return save_data()
 
-button1 = st.button('Click to save')
+button_save = st.button('Click to save')
 
-if button1 and "@" not in email:
-    st.error("please enter a valid email")
-elif button1 and len(title1)<1:
-    st.error("please input your job title")
-elif button1 and len(skills1) < 3:
-    st.error("please choose 3 skills")
-elif button1 and len(txt1)<100:
-    st.error(
-        f"Please fill out minimum 100 characters for your experience. {len(txt1)}/100 characters filled."
-    )
-elif button1 and len(skills1) >= 3:
-    currentjob = click_validation()
-    st.success("data saved!")
-    """# TESTING"""
-    #json.dumps(currentjob,indent=4)
-    '''#### Demographics'''
-    demographics
-    '''#### Skills'''
-    currentjob
-else:
-    st.info('Click here to save your info')
+
+if __name__ == '__main__':
+    
+    if button_save and "@" not in email:
+        st.error("please enter a valid email")
+    elif button_save and len(title1)<1:
+        st.error("please input your job title")
+    elif button_save and len(skills1) < 3:
+        st.error("please choose 3 skills")
+    elif button_save and len(txt_responsibilities)<100:
+        st.error(
+            f"Please fill out minimum 100 characters for your experience. {len(txt_responsibilities)}/100 characters filled."
+        )
+    elif button_save and len(skills1) >= 3:
+        currentjob = click_validation()
+        st.success("data saved!")
+        """# TESTING"""
+        #json.dumps(currentjob,indent=4)
+        '''#### Demographics'''
+        demographics
+        '''#### Skills'''
+        currentjob
+        
+        fig = radar_chart(currentjob['skills'])
+        save_pdf(fig)
+    else:
+        st.info('Click here to save your info')
 
 #writing skills to a df
 #st.write(pd.DataFrame(currentjob.get('skills_job_1'),columns=['skills', 'rating']))
