@@ -21,17 +21,35 @@ def radar_chart(skills):
     return fig 
 
     
-def save_pdf(fig):
+def save_pdf(fig, skills):
     pdf = FPDF()  # pdf object
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.add_page()
+    data = [list(skills.keys()), list(skills.values())]
 
-    pdf.set_font("Times", "B", 18)
-    pdf.set_xy(10.0, 20)
-    pdf.cell(w=75.0, h=5.0, align="L", txt="This is my sample text")
+    pdf.set_font("Times", "B", 10.0)
+    epw = pdf.w - 2*pdf.l_margin
+    col_width = epw/4       
+    # Document title centered, 'B'old, 14 pt
+    pdf.set_font('Times','B',14.0) 
+    pdf.cell(epw, 0.0, 'Demographic data', align='C')
+    pdf.set_font('Times','',10.0) 
+    pdf.ln(2*pdf.font_size)
+    
+    for row in data:
+        for datum in row:
+            # Enter data in colums
+            # Notice the use of the function str to coerce any input to the 
+            # string type. This is needed
+            # since pyFPDF expects a string, not a number.
+            pdf.cell(col_width, pdf.font_size, str(datum), border=1)
+        pdf.ln(pdf.font_size)  
+    # Line break equivalent to 4 lines
+    pdf.ln(4*pdf.font_size)     
+        
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                 fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 10, 10, 200, 100)
+                pdf.image(tmpfile.name, 10, 50, 200, 200)
 
     st.download_button(
         "Save as PDF",

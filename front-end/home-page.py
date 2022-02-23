@@ -137,7 +137,7 @@ if __name__ == '__main__':
         currentjob
         
         fig = radar_chart(currentjob['skills'])
-        save_pdf(fig)
+        save_pdf(fig, currentjob['skills'])
     else:
         st.info('Click here to save your info')
 
