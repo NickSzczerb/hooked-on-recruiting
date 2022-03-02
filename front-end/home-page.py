@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import json
 from reporting_charts import save_pdf, radar_chart
+import api.fast as af
 
 max_date = datetime.today()
 skill_list = [
@@ -135,6 +136,9 @@ if __name__ == '__main__':
         demographics
         '''#### Skills'''
         currentjob
+        
+        response = requests.get("http://127.0.0.1:8000/predict", params=dict(text="API succeeded")).json()
+        st.write(response)
         
         fig = radar_chart(currentjob['skills'])
         save_pdf(fig, currentjob['skills'])
