@@ -8,8 +8,9 @@ import pandas as pd
 import numpy as np
 import json
 from reporting_charts import save_pdf, radar_chart
-from models.prediction import run_model
+from models.prediction import run_model, return_keywords
 from models.utils import Preprocessor, KeywordsExtraction
+from mergeJobs import merge_proba
 
 max_date = datetime.today()
 skill_list = [
@@ -138,7 +139,9 @@ if __name__ == '__main__':
         '''#### Skills'''
         currentjob
         '''###### RECOMMENDATIONS'''
-        st.write(run_model(txt_responsibilities))
+        results = run_model(txt_responsibilities)
+        st.write(return_keywords(txt_responsibilities))
+        st.write(merge_proba(results))
 
         fig = radar_chart(currentjob['skills'])
         save_pdf(fig, currentjob['skills'])
