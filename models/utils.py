@@ -48,8 +48,9 @@ class KeywordsExtraction(BaseEstimator, TransformerMixin):
         assert isinstance(X, pd.DataFrame)
         print(X['Job Description'])
         X['KeyWords'] = X['Job Description'].apply(self.key_words)
+        X = X['KeyWords'][0]
 
-        return X[['KeyWords']]
+        return [" ".join(X)]
 
 # X_list = [i[0] for i in X ]
 
