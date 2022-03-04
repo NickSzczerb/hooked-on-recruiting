@@ -8,7 +8,9 @@ import pandas as pd
 import numpy as np
 import json
 from reporting_charts import save_pdf, radar_chart
-import api.fast as af
+# import api.fast as af
+from models.prediction import run_model
+from models.utils import Preprocessor, KeywordsExtraction
 
 max_date = datetime.today()
 skill_list = [
@@ -97,11 +99,11 @@ def save_data():
         "job_title": title1,
         "start_date":date1,
         "skills":
-         {   
+         {
             skills1[0]: float(skill_rating_1),
             skills1[1]: float(skill_rating_2),
             skills1[2]: float(skill_rating_3),
-         },  
+         },
         'job_desc': txt_responsibilities
     }
     return currentjob
@@ -116,7 +118,7 @@ button_save = st.button('Click to save')
 
 
 if __name__ == '__main__':
-    
+
     if button_save and "@" not in email:
         st.error("please enter a valid email")
     elif button_save and len(title1)<1:
@@ -137,9 +139,12 @@ if __name__ == '__main__':
         '''#### Skills'''
         currentjob
         
-        response = requests.get("http://127.0.0.1:8000/predict", params=dict(text="API succeeded")).json()
+        response = requests.get("http://127.0.0.1:8000/predict", params=dict(text=txt_responsibilities)).json()
         st.write(response)
         
+        '''###### RECOMMENDATIONS'''
+        # st.write(run_model(txt_responsibilities))
+
         fig = radar_chart(currentjob['skills'])
         save_pdf(fig, currentjob['skills'])
     else:

@@ -7,6 +7,8 @@ import joblib
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from models.prediction import run_model
+from models.utils import Preprocessor, KeywordsExtraction
 
 app = FastAPI()
 
@@ -27,4 +29,6 @@ def index():
 
 @app.get("/predict")
 def predict(text):
-    return dict(result=text)
+    # return text
+    result = run_model(text)
+    return result
