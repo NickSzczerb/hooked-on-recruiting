@@ -31,3 +31,8 @@ streamlit
 datetime
 requests
 matplotlib
+plotly
+sklearn
+keybert
+re
+nltk
