@@ -32,3 +32,4 @@ datetime
 requests
 matplotlib
 plotly
+fpdf
