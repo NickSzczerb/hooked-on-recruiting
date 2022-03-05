@@ -6,7 +6,6 @@ from datetime import datetime
 import requests
 import pandas as pd
 import numpy as np
-import json
 from reporting_charts import save_pdf, radar_chart
 from models.prediction import run_model, return_keywords
 from models.utils import Preprocessor, KeywordsExtraction
