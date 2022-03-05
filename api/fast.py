@@ -9,12 +9,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from models.prediction import run_model
 from models.utils import Preprocessor, KeywordsExtraction
-import pickle
+import uvicorn
 
 
-# model = joblib.load('models/full_model_v2.pkl')
-with open('models/full_model_v2.pkl','rb') as f:
-    model = pickle.load(f)
+model = joblib.load('models/full_model_v2.pkl')
+# with open('models/full_model_v2.pkl','rb') as f:
+#     model = pickle.load(f)
 app = FastAPI()
 
 
@@ -38,3 +38,6 @@ def predict(text):
     # return text
     result = run_model(model,text)
     return result
+
+if __name__ == '__main__':
+   uvicorn.run(app, host='127.0.0.1', port=8000)
