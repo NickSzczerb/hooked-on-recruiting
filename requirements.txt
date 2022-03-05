@@ -32,5 +32,4 @@ termcolor
 streamlit
 datetime
 requests
-json
 keybert
