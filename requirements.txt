@@ -32,6 +32,3 @@ datetime
 requests
 matplotlib
 plotly
-sklearn
-keybert
-nltk
