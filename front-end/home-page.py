@@ -9,7 +9,7 @@ import numpy as np
 import json
 from reporting_charts import save_pdf, radar_chart
 from models.prediction import run_model, return_keywords
-from models.utils import Preprocessor, KeywordsExtraction
+#from models.utils import Preprocessor, KeywordsExtraction
 from mergeJobs import merge_proba
 
 max_date = datetime.today()
