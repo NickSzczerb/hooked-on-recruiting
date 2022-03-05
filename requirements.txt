@@ -33,3 +33,4 @@ streamlit
 datetime
 requests
 json
+keybert

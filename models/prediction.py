@@ -3,8 +3,7 @@ import pandas as pd
 from models.utils import Preprocessor, KeywordsExtraction
 import transformers
 
-def run_model(text):
-    model = joblib.load('models/full_model_v2.joblib')
+def run_model(model,text):
     df_raw_input = pd.DataFrame(data={
         'Job Description': [text],
         'KeyWords': ['']})
