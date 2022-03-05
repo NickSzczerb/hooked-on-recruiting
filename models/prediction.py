@@ -1,7 +1,7 @@
 import joblib
 import pandas as pd
-from models.utils import Preprocessor, KeywordsExtraction
-import transformers
+#from models.utils import Preprocessor, KeywordsExtraction
+#import transformers
 
 def run_model(text):
     model = joblib.load('models/full_model_v2.joblib')
