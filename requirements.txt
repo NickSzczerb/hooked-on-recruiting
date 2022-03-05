@@ -34,5 +34,4 @@ matplotlib
 plotly
 sklearn
 keybert
-re
 nltk
