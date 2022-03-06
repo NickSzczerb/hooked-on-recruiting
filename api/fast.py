@@ -10,11 +10,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from models.prediction import run_model
 from models.utils import Preprocessor, KeywordsExtraction
 import uvicorn
+# from models.load_model import get_model_gcp
 
 
-model = joblib.load('models/full_model_v2.pkl')
+model = joblib.load('models/full_model_v2.joblib')
 # with open('models/full_model_v2.pkl','rb') as f:
 #     model = pickle.load(f)
+#model = get_model_gcp('hooked-on-recruiting_models')
+
+
 app = FastAPI()
 
 
