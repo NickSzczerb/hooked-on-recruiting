@@ -6,5 +6,5 @@ raw_data/
 *.csv
 **/__pycache__/
 .env
-*.joblib
+full_model_v2.joblib
 *.pkl
