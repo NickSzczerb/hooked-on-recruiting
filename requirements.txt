@@ -5,8 +5,8 @@ twine
 wheel>=0.29
 
 # data science
-numpy
 pandas
+numpy
 scikit-learn
 
 # tests/linter
