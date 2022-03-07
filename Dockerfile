@@ -8,4 +8,4 @@ COPY hooked-on-recruiting-f6ef402ba1dc.json /credentials.json
 
 RUN pip install -r requirements.txt
 
-CMD make run_api
+CMD uvicorn api.fast:app --host 0.0.0.0 --port $PORT

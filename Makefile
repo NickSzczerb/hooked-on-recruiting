@@ -55,4 +55,4 @@ pypi:
 	@twine upload dist/* -u $(PYPI_USERNAME)
 
 run_api:
-	@python api/fast.py
+	@python api/fast.py --reload  # load web server with code autoreload

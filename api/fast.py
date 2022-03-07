@@ -7,13 +7,14 @@ import joblib
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models.prediction import run_model
-from models.utils import Preprocessor, KeywordsExtraction
+from api.prediction import run_model
+#from api.prediction import Preprocessor
+#from api.utils import Preprocessor, KeywordsExtraction
 import uvicorn
 # from models.load_model import get_model_gcp
 
 
-model = joblib.load('models/full_model_v2.joblib')
+
 # with open('models/full_model_v2.pkl','rb') as f:
 #     model = pickle.load(f)
 #model = get_model_gcp('hooked-on-recruiting_models')
@@ -40,8 +41,9 @@ def index():
 @app.get("/predict")
 def predict(text):
     # return text
-    result = run_model(model,text)
+
+    result = run_model(text)
     return result
 
 if __name__ == '__main__':
-   uvicorn.run(app, host='127.0.0.1', port=8000)
+    uvicorn.run(app, host='127.0.0.1', port=8000)
