@@ -9,7 +9,7 @@ import numpy as np
 import json
 from reporting_charts import save_pdf, radar_chart
 from models.prediction import run_model, return_keywords
-#from models.utils import Preprocessor, KeywordsExtraction
+from models.utils import Preprocessor, KeywordsExtraction
 from mergeJobs import merge_proba
 
 max_date = datetime.today()
@@ -132,19 +132,23 @@ if __name__ == '__main__':
     elif button_save and len(skills1) >= 3:
         currentjob = click_validation()
         st.success("data saved!")
-        """# TESTING"""
-        #json.dumps(currentjob,indent=4)
-        '''#### Demographics'''
-        demographics
-        '''#### Skills'''
-        currentjob
+        # """# TESTING"""
+        # #json.dumps(currentjob,indent=4)
+        # '''#### Demographics'''
+        # demographics
+        # '''#### Skills'''
+        # currentjob
         '''###### RECOMMENDATIONS'''
         results = run_model(txt_responsibilities)
-        st.write(return_keywords(txt_responsibilities))
+        #st.write(results)
+        #st.write(return_keywords(txt_responsibilities))
         st.write(merge_proba(results))
 
         fig = radar_chart(currentjob['skills'])
         save_pdf(fig, currentjob['skills'])
+
+        '''#### FULL LIST OF Keywords'''
+        st.write(pd.DataFrame(results['keywords']))
     else:
         st.info('Click here to save your info')
 
