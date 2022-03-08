@@ -1,13 +1,19 @@
-import joblib
 import pandas as pd
-from models.utils import Preprocessor, KeywordsExtraction
+import os
+import requests
+#from models.utils import Preprocessor, KeywordsExtraction
+#import transformers
+
+
 
 def run_model(text):
-    model = joblib.load('models/full_model_v1.joblib')
-    df_raw_input = pd.DataFrame(data={
-        'Job Description': [text],
-        'KeyWords': ['']})
-    df_result = pd.DataFrame()
-    df_result['values'] = pd.Series(model.predict_proba(df_raw_input)[0])
-    df_result['jobs'] = pd.Series(model.classes_)
-    return df_result
+    # model = pickle.load(open('notebooks/piklemodel.pkl', 'rb'))
+    # #model = joblib.load('models/full_model_v2.joblib')
+    # #model = get_model_gcp('hooked-on-recruiting')
+    # df_raw_input = pd.DataFrame(data={
+    #     'Job Description': [text],
+    #     'KeyWords': ['']
+    # })
+    response = requests.get("https://hooked-on-test-vx2dmytfrq-nn.a.run.app/predict",
+                            params=dict(text=text)).json()
+    return response
