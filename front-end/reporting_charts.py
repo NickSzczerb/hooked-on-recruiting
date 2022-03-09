@@ -3,7 +3,8 @@ import plotly.express as px
 import pandas as pd
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile
-
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud, ImageColorGenerator
 
 
 def radar_chart(skills):
@@ -20,8 +21,21 @@ def radar_chart(skills):
     st.write(fig)
     return fig 
 
+def applicant_keyword_cloud(applicant_input):
+    wordcloud = WordCloud(
+                              background_color='white',
+                              #stopwords=20,
+                              max_font_size=60, 
+                              random_state=42
+                             ).generate(applicant_input)
+    print(wordcloud)
+    fig = plt.figure(1)
+#    plt.imshow(wordcloud)
+#    plt.axis('off')
+#    plt.show()
+    return fig
     
-def save_pdf(fig, skills):
+def save_pdf(fig, wordcloud_fig, skills):
     pdf = FPDF()  # pdf object
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.add_page()
@@ -49,9 +63,18 @@ def save_pdf(fig, skills):
         
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                 fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 10, 50, 200, 200)
+                pdf.image(tmpfile.name, 10, 50, 100, 100)
+    
+    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
+                wordcloud_fig.write_image(tmpfile.name)
+                pdf.image(tmpfile.name, 10, 100, 100, 100)
 
     st.download_button(
         "Save as PDF",
         data=pdf.output(dest='S').encode('latin-1'),
         file_name="Output.pdf")
+
+
+
+
+

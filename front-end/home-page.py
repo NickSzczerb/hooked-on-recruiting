@@ -144,7 +144,9 @@ if __name__ == '__main__':
         st.write(merge_proba(results))
 
         fig = radar_chart(currentjob['skills'])
-        save_pdf(fig, currentjob['skills'])
+        wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
+
+        save_pdf(fig, wordcloud_fig, currentjob['skills'])
 
         '''#### FULL LIST OF Keywords'''
         st.write(pd.DataFrame(results['keywords']))
