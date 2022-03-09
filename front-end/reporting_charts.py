@@ -29,10 +29,10 @@ def applicant_keyword_cloud(applicant_input):
                               random_state=42
                              ).generate(applicant_input)
     print(wordcloud)
+    plt.imshow(wordcloud)
+    plt.axis('off')
+    plt.show()
     fig = plt.figure(1)
-#    plt.imshow(wordcloud)
-#    plt.axis('off')
-#    plt.show()
     return fig
     
 def save_pdf(fig, wordcloud_fig, skills):
@@ -63,11 +63,12 @@ def save_pdf(fig, wordcloud_fig, skills):
         
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                 fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 10, 50, 100, 100)
+                pdf.image(tmpfile.name, 10, 50, 50, 50)
     
+
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-                wordcloud_fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 10, 100, 100, 100)
+               wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
+               pdf.image(tmpfile.name, 70, 50, 50, 50)
 
     st.download_button(
         "Save as PDF",
