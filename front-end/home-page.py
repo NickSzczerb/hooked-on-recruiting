@@ -51,7 +51,7 @@ columns1 = st.columns(2)
 title1 = columns1[0].text_input('Job Title')
 date1 = columns1[1].date_input("Start Date",
                                datetime.today(), max_value = max_date )
-date1 = date1.strftime('%Y-%m-%d %H:%m:%S')
+date1 = date1.strftime('%Y-%m-%d')
 
 skills1 = st.multiselect('Choose your Top 3 skills',skill_list)
 
@@ -144,7 +144,7 @@ if __name__ == '__main__':
         st.write(merge_proba(results))
 
         fig = radar_chart(currentjob['skills'])
-        save_pdf(fig, currentjob['skills'])
+        save_pdf(fig, currentjob['skills'], full_name, country, title1, date1)
 
         '''#### FULL LIST OF Keywords'''
         st.write(pd.DataFrame(results['keywords']))
