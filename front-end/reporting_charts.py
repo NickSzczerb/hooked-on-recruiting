@@ -43,24 +43,16 @@ def job_title_keyword(title_keyword_df):
     Y = title_keyword_df.columns[1]
     ax = title_keyword_df.plot.bar(x=X, y=Y, rot=90)
     ax = ax.legend(loc='best')
-
-    #keyword= title_keyword_df.iloc[:, 0].values.tolist()
-    #weight= title_keyword_df.iloc[:, 1].values.tolist()
-    #x_pos = np.arange(len(keyword)) 
-
-    #plt.bar(x_pos, weight,align='center')
-    #plt.xticks(x_pos, keyword, rotation='vertical') 
-    #plt.ylabel('keyword Weight')
-    #plt.show()
-    #figg = plt.figure(1)
     return ax
 
     
-def save_pdf(fig, wordcloud_fig, title_keyword_fig, skills):
+def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob):
     pdf = FPDF()  # pdf object
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.add_page()
-    data = [list(skills.keys()), list(skills.values())]
+    #data = [list(prob.jobs()), list(prob.values())]
+    data = [prob.jobs.tolist(), prob.iloc[:,0].tolist()]
+    print(data)
 
     pdf.set_font("Times", "B", 10.0)
     epw = pdf.w - 2*pdf.l_margin
@@ -89,7 +81,7 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, skills):
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
-               pdf.image(tmpfile.name, 100, 25, 100, 110)
+               pdf.image(tmpfile.name, 110, 25, 100, 110)
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                #title_keyword_fig.savefig(tmpfile.name, dpi=title_keyword_fig.dpi)

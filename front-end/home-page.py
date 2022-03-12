@@ -140,6 +140,7 @@ if __name__ == '__main__':
         # currentjob
         '''###### RECOMMENDATIONS'''
         results = run_model(txt_responsibilities)
+        prob = merge_proba(results)
         #st.write(results)
         #st.write(return_keywords(txt_responsibilities))
         st.write(merge_proba(results))
@@ -150,7 +151,7 @@ if __name__ == '__main__':
         #save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
         title_keyword_fig = job_title_keyword(pd.DataFrame(results['keywords']))
         
-        save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
+        save_pdf(fig, wordcloud_fig, title_keyword_fig, prob)
 
         '''#### FULL LIST OF Keywords'''
         st.write(pd.DataFrame(results['keywords']))
