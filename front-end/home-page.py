@@ -7,7 +7,7 @@ import requests
 import pandas as pd
 import numpy as np
 import json
-from reporting_charts import save_pdf, radar_chart, applicant_keyword_cloud
+from reporting_charts import save_pdf, radar_chart, applicant_keyword_cloud, job_title_keyword
 from models.prediction import run_model
 #from prediction import run_model
 from mergeJobs import merge_proba
@@ -145,9 +145,12 @@ if __name__ == '__main__':
         st.write(merge_proba(results))
 
         fig = radar_chart(currentjob['skills'])
-        wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
 
-        save_pdf(fig, wordcloud_fig, currentjob['skills'])
+        wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
+        #save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
+        title_keyword_fig = job_title_keyword(pd.DataFrame(results['keywords']))
+        
+        save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
 
         '''#### FULL LIST OF Keywords'''
         st.write(pd.DataFrame(results['keywords']))

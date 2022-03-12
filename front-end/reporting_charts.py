@@ -5,6 +5,7 @@ from fpdf import FPDF
 from tempfile import NamedTemporaryFile
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, ImageColorGenerator
+import numpy as np
 
 
 def radar_chart(skills):
@@ -34,8 +35,28 @@ def applicant_keyword_cloud(applicant_input):
     plt.show()
     fig = plt.figure(1)
     return fig
+
+
+def job_title_keyword(title_keyword_df):
+    title_keyword_df=title_keyword_df.sort_values(by=title_keyword_df.columns[1], ascending=False)
+    X = title_keyword_df.columns[0]
+    Y = title_keyword_df.columns[1]
+    ax = title_keyword_df.plot.bar(x=X, y=Y, rot=90)
+    ax = ax.legend(loc='best')
+
+    #keyword= title_keyword_df.iloc[:, 0].values.tolist()
+    #weight= title_keyword_df.iloc[:, 1].values.tolist()
+    #x_pos = np.arange(len(keyword)) 
+
+    #plt.bar(x_pos, weight,align='center')
+    #plt.xticks(x_pos, keyword, rotation='vertical') 
+    #plt.ylabel('keyword Weight')
+    #plt.show()
+    #figg = plt.figure(1)
+    return ax
+
     
-def save_pdf(fig, wordcloud_fig, skills):
+def save_pdf(fig, wordcloud_fig, title_keyword_fig, skills):
     pdf = FPDF()  # pdf object
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.add_page()
@@ -63,12 +84,18 @@ def save_pdf(fig, wordcloud_fig, skills):
         
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                 fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 90, 40, 120, 90)
+                pdf.image(tmpfile.name, 80, 35, 120, 90)
     
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
-               pdf.image(tmpfile.name, 110, 75, 100, 110)
+               pdf.image(tmpfile.name, 90, 112, 100, 110)
+
+    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
+               #title_keyword_fig.savefig(tmpfile.name, dpi=title_keyword_fig.dpi)
+               title_keyword_fig.figure.set_size_inches(7.5, 15.5)
+               title_keyword_fig.figure.savefig(tmpfile.name)
+               pdf.image(tmpfile.name, 90, 205, 100, 80)
 
     st.download_button(
         "Save as PDF",
