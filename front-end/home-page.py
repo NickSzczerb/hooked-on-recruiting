@@ -7,8 +7,9 @@ import requests
 import pandas as pd
 import numpy as np
 import json
-from reporting_charts import save_pdf, radar_chart
+from reporting_charts import save_pdf, radar_chart, applicant_keyword_cloud, job_title_keyword
 from models.prediction import run_model
+#from prediction import run_model
 from mergeJobs import merge_proba
 
 max_date = datetime.today()
@@ -65,11 +66,11 @@ def skillsparse(value,i):
 columnsSkills = st.columns(3)
 
 help_text = ('''Rating Descriptions:
-- *1-Beginner I need lots of help*
-- *2-Moderate (I need some guidance)*
-- *3-Intermediate (I am independent)*
-- *4-Advanced (I have used this skill independently for +1 year)*
-- *5-Expert (I can teach others about this skill*''')
+- *1-2: Beginner I need lots of help*
+- *3-4: Moderate (I need some guidance)*
+- *5-6: Intermediate (I am independent)*
+- *7-8: Advanced (I have used this skill independently for +1 year)*
+- *9-10: Expert (I can teach others about this skill*''')
 
 
 skill_rating_1 = columnsSkills[0].slider(f'{skillsparse(skills1,0)}', 1, 10, 3,help=help_text)
@@ -139,12 +140,18 @@ if __name__ == '__main__':
         # currentjob
         '''###### RECOMMENDATIONS'''
         results = run_model(txt_responsibilities)
+        prob = merge_proba(results)
         #st.write(results)
         #st.write(return_keywords(txt_responsibilities))
         st.write(merge_proba(results))
 
         fig = radar_chart(currentjob['skills'])
-        save_pdf(fig, currentjob['skills'], full_name, country, title1, date1)
+
+        wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
+        #save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
+        title_keyword_fig = job_title_keyword(pd.DataFrame(results['keywords']))
+        
+        save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1)
 
         '''#### FULL LIST OF Keywords'''
         st.write(pd.DataFrame(results['keywords']))
