@@ -66,11 +66,11 @@ def skillsparse(value,i):
 columnsSkills = st.columns(3)
 
 help_text = ('''Rating Descriptions:
-- *1-Beginner I need lots of help*
-- *2-Moderate (I need some guidance)*
-- *3-Intermediate (I am independent)*
-- *4-Advanced (I have used this skill independently for +1 year)*
-- *5-Expert (I can teach others about this skill*''')
+- *1-2: Beginner I need lots of help*
+- *3-4: Moderate (I need some guidance)*
+- *5-6: Intermediate (I am independent)*
+- *7-8: Advanced (I have used this skill independently for +1 year)*
+- *9-10: Expert (I can teach others about this skill*''')
 
 
 skill_rating_1 = columnsSkills[0].slider(f'{skillsparse(skills1,0)}', 1, 10, 3,help=help_text)
