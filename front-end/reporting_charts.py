@@ -84,18 +84,18 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, skills):
         
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                 fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 80, 35, 120, 90)
+                pdf.image(tmpfile.name, 5, 35, 120, 90)
     
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
-               pdf.image(tmpfile.name, 90, 112, 100, 110)
+               pdf.image(tmpfile.name, 100, 25, 100, 110)
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                #title_keyword_fig.savefig(tmpfile.name, dpi=title_keyword_fig.dpi)
-               title_keyword_fig.figure.set_size_inches(7.5, 15.5)
+               title_keyword_fig.figure.set_size_inches(7.5, 13.5)
                title_keyword_fig.figure.savefig(tmpfile.name)
-               pdf.image(tmpfile.name, 90, 205, 100, 80)
+               pdf.image(tmpfile.name, 50, 135, 120, 120)
 
     st.download_button(
         "Save as PDF",
