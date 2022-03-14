@@ -81,8 +81,8 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, ti
     pdf.set_font('Times','B',12.0) 
     pdf.cell(epw, 0.0, '                        According to you, your')
     pdf.ln(1.25*pdf.font_size)
-    pdf.cell(epw, 0.0, '                        five main skills are :')
-    pdf.ln(20*pdf.font_size)
+    pdf.cell(epw, 0.0, '                        five main hard skills are :')
+    pdf.ln(19.5*pdf.font_size)
     pdf.cell(epw, 0.0, '                        The most salient words used')
     pdf.ln(1.25*pdf.font_size)
     pdf.cell(epw, 0.0, '                        in your descriptions are :')
@@ -99,7 +99,7 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, ti
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
-               pdf.image(tmpfile.name, 105, 115, 85, 100)
+               pdf.image(tmpfile.name, 110, 125, 70, 85)
 
     pdf.ln(6*pdf.font_size)
 
