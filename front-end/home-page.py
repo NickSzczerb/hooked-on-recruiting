@@ -54,7 +54,7 @@ date1 = columns1[1].date_input("Start Date",
                                datetime.today(), max_value = max_date )
 date1 = date1.strftime('%Y-%m-%d')
 
-skills1 = st.multiselect('Choose your Top 3 skills',skill_list)
+skills1 = st.multiselect('Choose your Top 5 skills',skill_list)
 
 def skillsparse(value,i):
     try:
@@ -62,8 +62,8 @@ def skillsparse(value,i):
     except:
         return f"Please choose skill #{i+1} above to rate"
 
-'''###### Rate your skills'''
-columnsSkills = st.columns(3)
+'''### Rate your skills'''
+columnsSkills = st.columns(5)
 
 help_text = ('''Rating Descriptions:
 - *1-2: Beginner I need lots of help*
@@ -84,6 +84,16 @@ skill_rating_3 = columnsSkills[2].slider(f'{skillsparse(skills1,2)}',
                                   10,
                                   3,
                                   help=help_text)
+skill_rating_4 = columnsSkills[3].slider(f'{skillsparse(skills1,3)}',
+                                  1,
+                                  10,
+                                  3,
+                                  help=help_text)
+skill_rating_5 = columnsSkills[4].slider(f'{skillsparse(skills1,4)}',
+                                  1,
+                                  10,
+                                  3,
+                                  help=help_text)
 
 txt_responsibilities = st.text_area('What were your main responsibilities and accomplishments in this role?')
 
@@ -100,17 +110,19 @@ def save_data():
         "start_date":date1,
         "skills":
          {
-            skills1[0]: float(skill_rating_1),
-            skills1[1]: float(skill_rating_2),
-            skills1[2]: float(skill_rating_3),
+            skills1[0]: int(skill_rating_1),
+            skills1[1]: int(skill_rating_2),
+            skills1[2]: int(skill_rating_3),
+            skills1[3]: int(skill_rating_4),
+            skills1[4]: int(skill_rating_5),
          },
         'job_desc': txt_responsibilities
     }
     return currentjob
 
 def click_validation():
-    if len(skills1)<3:
-        return st.error("please choose 3 skills")
+    if len(skills1) < 5:
+        return st.error("please choose 5 skills")
     else:
         return save_data()
 
@@ -121,11 +133,11 @@ if __name__ == '__main__':
 
     if button_save and "@" not in email:
         st.error("please enter a valid email")
-    elif button_save and len(title1)<1:
+    elif button_save and len(title1) < 1:
         st.error("please input your job title")
     elif button_save and len(skills1) < 3:
-        st.error("please choose 3 skills")
-    elif button_save and len(txt_responsibilities)<100:
+        st.error("please choose 5 skills")
+    elif button_save and len(txt_responsibilities) < 100:
         st.error(
             f"Please fill out minimum 100 characters for your experience. {len(txt_responsibilities)}/100 characters filled."
         )
@@ -138,7 +150,7 @@ if __name__ == '__main__':
         # demographics
         # '''#### Skills'''
         # currentjob
-        '''###### RECOMMENDATIONS'''
+        '''### Recommendations'''
         results = run_model(txt_responsibilities)
         prob = merge_proba(results)
         #st.write(results)
@@ -153,7 +165,7 @@ if __name__ == '__main__':
         
         save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1)
 
-        '''#### FULL LIST OF Keywords'''
+        '''### List of keywords'''
         st.write(pd.DataFrame(results['keywords']))
     else:
         st.info('Click here to save your info')
