@@ -7,13 +7,13 @@ import requests
 import pandas as pd
 import numpy as np
 import json
-from reporting_charts import save_pdf, radar_chart, applicant_keyword_cloud, job_title_keyword
+from reporting_charts import save_pdf, hard_skills_radar_chart, soft_skills_radar_chart, applicant_keyword_cloud, job_title_keyword
 from models.prediction import run_model
 #from prediction import run_model
 from mergeJobs import merge_proba
 
 max_date = datetime.today()
-skill_list = [
+hard_skill_list = [
     '.NET', '.NET Core', 'Active Directory', 'Agile', 'AI', 'Algorithms', 'Android',
     'Angular', 'Ansible', 'APIs', 'AutoCAD', 'Automated Testing', 'AWS',
     'Azure', 'BDD', 'Big Data', 'Business Intelligence', 'C', 'C#', 'C++',
@@ -32,6 +32,12 @@ skill_list = [
     'TypeScript', 'UI', 'Unit Testing', 'Unix', 'UX', 'Version Control',
     'Virtualization', 'VMware', 'Vue.js', 'Web Services'  
     
+]
+
+soft_skill_list = ['Communication','Teamwork', 'Problem-solving','Time management',
+                    'Critical thinking', 'Decision-making', 'Organizational', 'Stress management',
+                    'Adaptability', 'Conflict management', 'Leadership', 'Creativity',
+                    'Resourcefulness', 'Persuasion', 'Openness to criticism'
 ]
 
 
@@ -55,16 +61,23 @@ date1 = columns1[1].date_input("Start Date",
                                datetime.today(), max_value = max_date )
 date1 = date1.strftime('%Y-%m-%d')
 
-skills1 = st.multiselect('Choose your Top 5 skills',skill_list)
-
-def skillsparse(value,i):
+def hardskillsparse(value,i):
     try:
         return value[i]
     except:
-        return f"     Skill Nº{i+1}"
+        return f"Hard Skill Nº{i+1}"
 
-'''### Rate your skills'''
-columnsSkills = st.columns(5)
+def softskillsparse(value,i):
+    try:
+        return value[i]
+    except:
+        return f"Soft Skill Nº{i+1}"
+
+'''### Rate your hard skills'''
+
+skills1 = st.multiselect('Choose your top 5 hard skills',hard_skill_list)
+
+columnsHardSkills = st.columns(5)
 
 help_text_skills = ('''Rating Descriptions:
 - *1-2: Beginner, I need lots of help*
@@ -74,27 +87,60 @@ help_text_skills = ('''Rating Descriptions:
 - *9-10: Expert, I can teach others about this skill*''')
 
 
-skill_rating_1 = columnsSkills[0].slider(f'{skillsparse(skills1,0)}', 
+hard_skill_rating_1 = columnsHardSkills[0].slider(f'{hardskillsparse(skills1,0)}', 
                                 1, 
                                 10, 
                                 3,
                                 help=help_text_skills)
-skill_rating_2 = columnsSkills[1].slider(f'{skillsparse(skills1,1)}',
+hard_skill_rating_2 = columnsHardSkills[1].slider(f'{hardskillsparse(skills1,1)}',
                                 1,
                                 10,
                                 3,
                                 help=help_text_skills)
-skill_rating_3 = columnsSkills[2].slider(f'{skillsparse(skills1,2)}',
+hard_skill_rating_3 = columnsHardSkills[2].slider(f'{hardskillsparse(skills1,2)}',
                                 1,
                                 10,
                                 3,
                                 help=help_text_skills)
-skill_rating_4 = columnsSkills[3].slider(f'{skillsparse(skills1,3)}',
+hard_skill_rating_4 = columnsHardSkills[3].slider(f'{hardskillsparse(skills1,3)}',
                                 1,
                                 10,
                                 3,
                                 help=help_text_skills)
-skill_rating_5 = columnsSkills[4].slider(f'{skillsparse(skills1,4)}',
+hard_skill_rating_5 = columnsHardSkills[4].slider(f'{hardskillsparse(skills1,4)}',
+                                1,
+                                10,
+                                3,
+                                help=help_text_skills)
+
+'''### Rate your soft skills'''
+
+skills2 = st.multiselect('Choose your top 5 soft skills',soft_skill_list)
+
+columnsSoftSkills = st.columns(5)
+
+
+soft_skill_rating_1 = columnsSoftSkills[0].slider(f'{softskillsparse(skills2,0)}', 
+                                1, 
+                                10, 
+                                3,
+                                help=help_text_skills)
+soft_skill_rating_2 = columnsSoftSkills[1].slider(f'{softskillsparse(skills2,1)}',
+                                1,
+                                10,
+                                3,
+                                help=help_text_skills)
+soft_skill_rating_3 = columnsSoftSkills[2].slider(f'{softskillsparse(skills2,2)}',
+                                1,
+                                10,
+                                3,
+                                help=help_text_skills)
+soft_skill_rating_4 = columnsSoftSkills[3].slider(f'{softskillsparse(skills2,3)}',
+                                1,
+                                10,
+                                3,
+                                help=help_text_skills)
+soft_skill_rating_5 = columnsSoftSkills[4].slider(f'{softskillsparse(skills2,4)}',
                                 1,
                                 10,
                                 3,
@@ -104,7 +150,7 @@ txt_responsibilities = st.text_area('What were your main responsibilities and ac
 
 demographics = {"email": email,
                 'name': full_name,
-                'country':country
+                'country': country
 }
 
 
@@ -113,13 +159,21 @@ def save_data():
     currentjob = {
         "job_title": title1,
         "start_date": date1,
-        "skills":
+        "hard_skills":
          {
-            skills1[0]: int(skill_rating_1),
-            skills1[1]: int(skill_rating_2),
-            skills1[2]: int(skill_rating_3),
-            skills1[3]: int(skill_rating_4),
-            skills1[4]: int(skill_rating_5),
+            skills1[0]: int(hard_skill_rating_1),
+            skills1[1]: int(hard_skill_rating_2),
+            skills1[2]: int(hard_skill_rating_3),
+            skills1[3]: int(hard_skill_rating_4),
+            skills1[4]: int(hard_skill_rating_5),
+         },
+        "soft_skills":
+        {
+            skills2[0]: int(soft_skill_rating_1),
+            skills2[1]: int(soft_skill_rating_2),
+            skills2[2]: int(soft_skill_rating_3),
+            skills2[3]: int(soft_skill_rating_4),
+            skills2[4]: int(soft_skill_rating_5),
          },
         'job_desc': txt_responsibilities
     }
@@ -140,7 +194,9 @@ if __name__ == '__main__':
         st.error("Please enter a valid email")
     elif button_save and len(title1) < 1:
         st.error("Please input your job title")
-    elif button_save and len(skills1) < 3:
+    elif button_save and len(skills1) < 5:
+        st.error("Please choose 5 skills")
+    elif button_save and len(skills2) < 5:
         st.error("Please choose 5 skills")
     elif button_save and len(txt_responsibilities) < 100:
         st.error(
@@ -155,25 +211,27 @@ if __name__ == '__main__':
         # demographics
         # '''#### Skills'''
         # currentjob
+
+        #st.write(results)
+        #st.write(return_keywords(txt_responsibilities))
+        '''#### Your hard skills'''
+        fig1 = hard_skills_radar_chart(currentjob['hard_skills'])
+        '''#### Your soft skills'''
+        fig2 = soft_skills_radar_chart(currentjob['soft_skills'])
         '''### Recommendations'''
         results = run_model(txt_responsibilities)
         prob = merge_proba(results)
-        #st.write(results)
-        #st.write(return_keywords(txt_responsibilities))
         st.write(merge_proba(results))
-
-        fig = radar_chart(currentjob['skills'])
 
         wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
         #save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
         title_keyword_fig = job_title_keyword(pd.DataFrame(results['keywords']))
-        
-        save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1)
-
-        help_text_keywords = ('Use this list to have a glimpse of what you can do, and what the industry needs')
 
         '''### List of keywords associated with your profile'''
         st.write(pd.DataFrame(results['keywords']))
+        
+        save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1)
+
     else:
         st.info('Click here to save your info')
 

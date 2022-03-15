@@ -8,24 +8,43 @@ from wordcloud import WordCloud, ImageColorGenerator
 import numpy as np
 
 
-def radar_chart(skills):
+def hard_skills_radar_chart(hard_skills):
     data = {
-        'skills': list(skills.keys()),#['C#','PySpark','Html','.Net','Pandas'],
-        'ratings' : list(skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
+        'hard_skills': list(hard_skills.keys()),#['C#','PySpark','Html','.Net','Pandas'],
+        'ratings' : list(hard_skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
     }
      
     df = pd.DataFrame(data)
-    fig = px.line_polar(df, r='ratings',
+    fig1 = px.line_polar(df, r='ratings',
                             range_r = [0, 10], 
-                            theta='skills', 
+                            theta='hard_skills', 
                             line_close=True)
-    fig.update_traces(fill='toself')
+    fig1.update_traces(fill='toself')
 
     # config = dict({"displaylogo": False,
     #     'modeBarButtonsToRemove': ['pan2d','lasso2d']})
     # fig.show(config=config)
-    st.write(fig)
-    return fig
+    st.write(fig1)
+    return fig1
+
+def soft_skills_radar_chart(soft_skills):
+    data = {
+        'soft_skills': list(soft_skills.keys()),#['Communication','Persuasion','Openness to criticism','Leadership'],
+        'ratings' : list(soft_skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
+    }
+     
+    df = pd.DataFrame(data)
+    fig2 = px.line_polar(df, r='ratings',
+                            range_r = [0, 10], 
+                            theta='soft_skills', 
+                            line_close=True)
+    fig2.update_traces(fill='toself')
+
+    # config = dict({"displaylogo": False,
+    #     'modeBarButtonsToRemove': ['pan2d','lasso2d']})
+    # fig.show(config=config)
+    st.write(fig2)
+    return fig2
 
 def applicant_keyword_cloud(applicant_input):
     wordcloud = WordCloud(    background_color='white',
@@ -50,7 +69,7 @@ def job_title_keyword(title_keyword_df):
     ax = ax.legend(loc='best')
     return ax
 
-def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1):
+def save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1):
     pdf = FPDF()  # pdf object
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.add_page()
@@ -80,16 +99,15 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, ti
     #fpdf.multi_cell(w: float, h: float, txt: str, border = 0, 
                 #align: str = 'J', fill: bool = False)
 
-    pdf.ln(5*pdf.font_size)
+    pdf.ln(3*pdf.font_size)
     pdf.set_font('Times','B',12.0) 
-    pdf.cell(epw, 0.0, '                        According to you, your')
+    pdf.cell(epw, 0.0, '                        Your five main Hard Skills                                        Your five main Soft Skills')
     pdf.ln(1.25*pdf.font_size)
-    pdf.cell(epw, 0.0, '                        five main hard skills are :')
-    pdf.ln(19.5*pdf.font_size)
-    pdf.cell(epw, 0.0, '                        The most salient words used')
+    pdf.ln(25.5*pdf.font_size)
+    pdf.cell(epw, 0.0, '                        The most salient words')
     pdf.ln(1.25*pdf.font_size)
-    pdf.cell(epw, 0.0, '                        in your descriptions are :')
-    pdf.ln(13*pdf.font_size)
+    pdf.cell(epw, 0.0, '                        related to your profile :')
+    pdf.ln(12*pdf.font_size)
     pdf.cell(epw, 0.0, 'According to our analysis,', align = 'C')
     pdf.ln(1.25*pdf.font_size)
     pdf.cell(epw, 0.0, 'here are the roles for which', align = 'C')
@@ -97,14 +115,18 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, ti
     pdf.cell(epw, 0.0, 'you might be the more suited', align = 'C')
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-                fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 90, 45, 110, 80)
+                fig1.write_image(tmpfile.name)
+                pdf.image(tmpfile.name, 5, 70, 110, 80)
+
+    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
+                fig2.write_image(tmpfile.name)
+                pdf.image(tmpfile.name, 96, 70, 110, 80)
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
                wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
-               pdf.image(tmpfile.name, 110, 125, 70, 85)
+               pdf.image(tmpfile.name, 115, 140, 70, 85)
 
-    pdf.ln(6*pdf.font_size)
+    pdf.ln(4*pdf.font_size)
 
     pdf.set_font("Times", "B", 10.0)
     for row in data:
