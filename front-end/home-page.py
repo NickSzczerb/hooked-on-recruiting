@@ -28,7 +28,7 @@ hard_skill_list = [
     'Node.js', 'NoSQL', 'OO', 'Office', 'Photoshop', 'PHP', 'Pivot Tables', 'Power BI',
     'PowerShell', 'PRINCE2', 'Project Management', 'Python', 'R', 'React', 'RESTful APIs', 'Revit',
     'SaaS', 'Salesforce', 'SAP', 'Scripting Language', 'Scrum', 'SEO',
-    'SharePoint', 'SOLID', 'SQL Server', 'Tableau', 'TDD', 'Terraform',
+    'SharePoint', 'SOLID', 'SQL', 'SQL Server', 'Tableau', 'TDD', 'Terraform',
     'TypeScript', 'UI', 'Unit Testing', 'Unix', 'UX', 'Version Control',
     'Virtualization', 'VMware', 'Vue.js', 'Web Services'  
     
@@ -181,7 +181,9 @@ def save_data():
 
 def click_validation():
     if len(skills1) < 5:
-        return st.error("Please choose 5 skills")
+        return st.error("Please choose 5 hard skills")
+    elif len(skills2) < 5:
+        return st.error("Please choose 5 soft skills")
     else:
         return save_data()
 
@@ -229,7 +231,7 @@ if __name__ == '__main__':
 
         '''### List of keywords associated with your profile'''
         st.write(pd.DataFrame(results['keywords']))
-        
+
         save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1)
 
     else:
