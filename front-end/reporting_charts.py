@@ -15,7 +15,10 @@ def radar_chart(skills):
     }
      
     df = pd.DataFrame(data)
-    fig = px.line_polar(df, r='ratings', theta='skills', line_close=True)
+    fig = px.line_polar(df, r='ratings',
+                            range_r = [0, 10], 
+                            theta='skills', 
+                            line_close=True)
     fig.update_traces(fill='toself')
 
     # config = dict({"displaylogo": False,
@@ -89,7 +92,7 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob, full_name, country, ti
     pdf.ln(13*pdf.font_size)
     pdf.cell(epw, 0.0, 'According to our analysis,', align = 'C')
     pdf.ln(1.25*pdf.font_size)
-    pdf.cell(epw, 0.0, 'here are the jobs for which', align = 'C')
+    pdf.cell(epw, 0.0, 'here are the roles for which', align = 'C')
     pdf.ln(1.25*pdf.font_size)
     pdf.cell(epw, 0.0, 'you might be the more suited', align = 'C')
 
