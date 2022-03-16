@@ -16,9 +16,9 @@ def hard_skills_radar_chart(hard_skills):
      
     df = pd.DataFrame(data)
     fig1 = px.line_polar(df, r='ratings',
-                            range_r = [0, 10], 
-                            theta='hard_skills', 
-                            line_close=True)
+                        range_r = [0, 10], 
+                        theta='hard_skills', 
+                        line_close=True)
     fig1.update_traces(fill='toself')
 
     # config = dict({"displaylogo": False,
@@ -36,7 +36,7 @@ def soft_skills_radar_chart(soft_skills):
     df = pd.DataFrame(data)
     fig2 = px.line_polar(df, r='ratings',
                             range_r = [0, 10], 
-                            theta='soft_skills', 
+                            theta='soft_skills',
                             line_close=True)
     fig2.update_traces(fill='toself')
 
