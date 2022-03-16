@@ -30,8 +30,8 @@ hard_skill_list = [
     'SaaS', 'Salesforce', 'SAP', 'Scripting Language', 'Scrum', 'SEO',
     'SharePoint', 'SOLID', 'SQL', 'SQL Server', 'Tableau', 'TDD', 'Terraform',
     'TypeScript', 'UI', 'Unit Testing', 'Unix', 'UX', 'Version Control',
-    'Virtualization', 'VMware', 'Vue.js', 'Web Services'  
-    
+    'Virtualization', 'VMware', 'Vue.js', 'Web Services'
+
 ]
 
 soft_skill_list = ['Communication','Teamwork', 'Problem-solving','Time management',
@@ -87,9 +87,9 @@ help_text_skills = ('''Rating Descriptions:
 - *9-10: Expert, I can teach others about this skill*''')
 
 
-hard_skill_rating_1 = columnsHardSkills[0].slider(f'{hardskillsparse(skills1,0)}', 
-                                1, 
-                                10, 
+hard_skill_rating_1 = columnsHardSkills[0].slider(f'{hardskillsparse(skills1,0)}',
+                                1,
+                                10,
                                 3,
                                 help=help_text_skills)
 hard_skill_rating_2 = columnsHardSkills[1].slider(f'{hardskillsparse(skills1,1)}',
@@ -120,9 +120,9 @@ skills2 = st.multiselect('Choose your top 5 soft skills',soft_skill_list)
 columnsSoftSkills = st.columns(5)
 
 
-soft_skill_rating_1 = columnsSoftSkills[0].slider(f'{softskillsparse(skills2,0)}', 
-                                1, 
-                                10, 
+soft_skill_rating_1 = columnsSoftSkills[0].slider(f'{softskillsparse(skills2,0)}',
+                                1,
+                                10,
                                 3,
                                 help=help_text_skills)
 soft_skill_rating_2 = columnsSoftSkills[1].slider(f'{softskillsparse(skills2,1)}',
@@ -216,13 +216,15 @@ if __name__ == '__main__':
 
         #st.write(results)
         #st.write(return_keywords(txt_responsibilities))
+        with st.spinner('Generating your predictions...'):
+            results = run_model(txt_responsibilities)
+            prob = merge_proba(results)
         '''#### Your hard skills'''
         fig1 = hard_skills_radar_chart(currentjob['hard_skills'])
         '''#### Your soft skills'''
         fig2 = soft_skills_radar_chart(currentjob['soft_skills'])
         '''### Recommendations'''
-        results = run_model(txt_responsibilities)
-        prob = merge_proba(results)
+
         st.write(merge_proba(results))
 
         wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
