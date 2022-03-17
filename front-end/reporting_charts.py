@@ -50,7 +50,7 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob):
     pdf = FPDF()  # pdf object
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.add_page()
-    prob=prob.iloc[:,[1,0,2]]
+    prob=prob.iloc[:,[1,0]]
     prob.iloc[:,1]=prob.iloc[:,1].round(3)
     data=[]
     for i in range(len(prob.iloc[:,0])):
@@ -77,11 +77,9 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob):
             # string type. This is needed
             # since pyFPDF expects a string, not a number.
             if x == 0:
-                pdf.cell(col_width*3, pdf.font_size*3, str(y), border=1)
+                pdf.cell(col_width*3, pdf.font_size, str(y), border=1)
             elif x == 1:
-                pdf.cell(col_width, pdf.font_size*3, str(y), border=1)
-            else:
-                pdf.multi_cell(col_width*8, pdf.font_size, str(y), border=1)
+                pdf.cell(col_width, pdf.font_size, str(y), border=1)
 
             #pdf.multi_cell(col_width, pdf.font_size, str(datum), border=1)
         pdf.ln(pdf.font_size)  
