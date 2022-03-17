@@ -8,30 +8,54 @@ from wordcloud import WordCloud, ImageColorGenerator
 import numpy as np
 
 
-def radar_chart(skills):
+def hard_skills_radar_chart(hard_skills):
     data = {
-        'skills': list(skills.keys()),#['C#','PySpark','Html','.Net','Pandas'],
-        'ratings' : list(skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
+        'hard_skills': list(hard_skills.keys()),#['C#','PySpark','Html','.Net','Pandas'],
+        'ratings' : list(hard_skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
     }
      
     df = pd.DataFrame(data)
-    fig = px.line_polar(df, r='ratings', theta='skills', line_close=True)
+    fig1 = px.line_polar(df, r='ratings',
+                        range_r = [0, 10], 
+                        theta='hard_skills', 
+                        line_close=True)
+    fig1.update_traces(fill='toself')
+
     # config = dict({"displaylogo": False,
     #     'modeBarButtonsToRemove': ['pan2d','lasso2d']})
     # fig.show(config=config)
-    st.write(fig)
-    return fig 
+    st.write(fig1)
+    return fig1
+
+def soft_skills_radar_chart(soft_skills):
+    data = {
+        'soft_skills': list(soft_skills.keys()),#['Communication','Persuasion','Openness to criticism','Leadership'],
+        'ratings' : list(soft_skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
+    }
+     
+    df = pd.DataFrame(data)
+    fig2 = px.line_polar(df, r='ratings',
+                            range_r = [0, 10], 
+                            theta='soft_skills',
+                            line_close=True)
+    fig2.update_traces(fill='toself')
+
+    # config = dict({"displaylogo": False,
+    #     'modeBarButtonsToRemove': ['pan2d','lasso2d']})
+    # fig.show(config=config)
+    st.write(fig2)
+    return fig2
 
 def applicant_keyword_cloud(applicant_input):
-    wordcloud = WordCloud(
-                              background_color='white',
+    wordcloud = WordCloud(    background_color='white',
                               #stopwords=20,
-                              max_font_size=60, 
+                              max_font_size=40, 
                               random_state=42
                              ).generate(applicant_input)
     print(wordcloud)
     plt.imshow(wordcloud)
     plt.axis('off')
+    plt.tight_layout(pad=0)
     plt.show()
     fig = plt.figure(1)
     return fig
@@ -45,13 +69,12 @@ def job_title_keyword(title_keyword_df):
     ax = ax.legend(loc='best')
     return ax
 
-    
-def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob):
+def save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1):
     pdf = FPDF()  # pdf object
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.add_page()
     prob=prob.iloc[:,[1,0]]
-    prob.iloc[:,1]=prob.iloc[:,1].round(3)
+    prob.iloc[:,1]=prob.iloc[:,1].round(3)*1000
     data=[]
     for i in range(len(prob.iloc[:,0])):
         data.append(prob.iloc[i].values.tolist())
@@ -59,17 +82,53 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob):
 
     pdf.set_font("Times", "B", 10.0)
     epw = pdf.w - 2*pdf.l_margin
-    col_width = epw/12
+    col_width = epw/4
     # Document title centered, 'B'old, 14 pt
-    pdf.set_font('Times','B',14.0) 
-    pdf.cell(epw, 0.0, 'Title Prediction', align='C')
+    pdf.set_font('Times','B',25.0)
+    pdf.cell(epw, 0.0, 'Hooked On Recruiting', align='C')
+    pdf.image('front-end/HookedOnRecruitingLogo.png', 10,8,20)
+    pdf.ln(2*pdf.font_size)
+    pdf.set_font('Times','B',15.0)
+    # User informations 
+    pdf.cell(epw, 0.0, f'{full_name} from {country}', align = 'C')
+    pdf.ln(2*pdf.font_size)
+    pdf.cell(epw, 0.0, f'{title1} since the {date1}', align = 'C')
+    pdf.ln(2*pdf.font_size)
+    col_width = epw/12
 
     #fpdf.multi_cell(w: float, h: float, txt: str, border = 0, 
                 #align: str = 'J', fill: bool = False)
 
-    pdf.set_font('Times','',10.0) 
+    pdf.ln(3*pdf.font_size)
+    pdf.set_font('Times','B',12.0) 
+    pdf.cell(epw, 0.0, '                        Your five main Hard Skills                                        Your five main Soft Skills')
+    pdf.ln(1.25*pdf.font_size)
+    pdf.ln(25.5*pdf.font_size)
+    pdf.cell(epw, 0.0, '                        The most salient words')
+    pdf.ln(1.25*pdf.font_size)
+    pdf.cell(epw, 0.0, '                        related to your profile :')
+    pdf.ln(12*pdf.font_size)
+    pdf.cell(epw, 0.0, 'According to our analysis,', align = 'C')
+    #pdf.ln(1.25*pdf.font_size)
+    #pdf.cell(epw, 0.0, 'here are the roles for which', align = 'C')
+    pdf.ln(1.25*pdf.font_size)
+    pdf.cell(epw, 0.0, 'you might be more suited for', align = 'C')
+
+    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
+                fig1.write_image(tmpfile.name)
+                pdf.image(tmpfile.name, 5, 70, 110, 80)
+
+    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
+                fig2.write_image(tmpfile.name)
+                pdf.image(tmpfile.name, 96, 70, 110, 80)
+
+    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
+               wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
+               pdf.image(tmpfile.name, 115, 140, 70, 85)
+
     pdf.ln(4*pdf.font_size)
-    
+
+    pdf.set_font("Times", "B", 10.0)
     for row in data:
         for x,y in enumerate(row):
             # Enter data in colums
@@ -77,34 +136,20 @@ def save_pdf(fig, wordcloud_fig, title_keyword_fig, prob):
             # string type. This is needed
             # since pyFPDF expects a string, not a number.
             if x == 0:
+                pdf.cell(col_width*4, pdf.font_size, '                         ')
                 pdf.cell(col_width*3, pdf.font_size, str(y), border=1)
             elif x == 1:
-                pdf.cell(col_width, pdf.font_size, str(y), border=1)
+                pdf.cell(col_width, pdf.font_size, str(y), border=1, ln=1)
 
-            #pdf.multi_cell(col_width, pdf.font_size, str(datum), border=1)
-        pdf.ln(pdf.font_size)  
+
+
+    #pdf.multi_cell(col_width, pdf.font_size, str(datum), border=1) 
     # Line break equivalent to 4 lines
-    pdf.ln(4*pdf.font_size)     
-        
-    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-                fig.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 5, 105, 110, 80)
-    
-
-    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-               wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
-               pdf.image(tmpfile.name, 110, 100, 85, 100)
-
-    with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-               #title_keyword_fig.savefig(tmpfile.name, dpi=title_keyword_fig.dpi)
-               title_keyword_fig.figure.set_size_inches(6.5, 12.5)
-               title_keyword_fig.figure.savefig(tmpfile.name)
-               pdf.image(tmpfile.name, 50, 180, 110, 110)
 
     st.download_button(
         "Save as PDF",
         data=pdf.output(dest='S').encode('latin-1'),
-        file_name="Output.pdf")
+        file_name="Your Job Matching Report.pdf")
 
 
 
