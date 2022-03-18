@@ -97,31 +97,31 @@ def save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, coun
     col_width = epw/12
 
     #fpdf.multi_cell(w: float, h: float, txt: str, border = 0,
-                #align: str = 'J', fill: bool = False)
+    #align: str = 'J', fill: bool = False)
 
     pdf.ln(3*pdf.font_size)
     pdf.set_font('Times','B',13.0)
-    pdf.cell(epw, 0.0, '                    Your five main Hard Skills                                 Your five main Soft Skills')
+    pdf.cell(epw, 0.0, '                             Your Tech Skills                                                  Your Soft Skills')
     pdf.ln(24.75*pdf.font_size)
-    pdf.cell(epw, 0.0, '                        The most salient words')
+    pdf.cell(epw, 0.0, '                        Word cloud containing')
     pdf.ln(1.25*pdf.font_size)
-    pdf.cell(epw, 0.0, '                        related to your profile :')
+    pdf.cell(epw, 0.0, '                        your most relevant keywords :')
     pdf.ln(10*pdf.font_size)
-    pdf.cell(epw, 0.0, 'According to our analysis, here are the roles', align = 'C')
+    pdf.cell(epw, 0.0, 'According to our analysis, here are your', align = 'C')
     pdf.ln(1.25*pdf.font_size)
-    pdf.cell(epw, 0.0, 'for which you might be the more suited', align = 'C')
+    pdf.cell(epw, 0.0, 'top 5 recommended job titles', align='C')
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-                fig1.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 5, 70, 110, 80)
+        fig1.write_image(tmpfile.name)
+        pdf.image(tmpfile.name, 5, 70, 110, 80)
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-                fig2.write_image(tmpfile.name)
-                pdf.image(tmpfile.name, 96, 70, 110, 80)
+        fig2.write_image(tmpfile.name)
+        pdf.image(tmpfile.name, 96, 70, 110, 80)
 
     with NamedTemporaryFile(delete=True, suffix=".png") as tmpfile:
-               wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
-               pdf.image(tmpfile.name, 115, 140, 70, 85)
+        wordcloud_fig.savefig(tmpfile.name, dpi=wordcloud_fig.dpi)
+        pdf.image(tmpfile.name, 115, 140, 70, 85)
 
     pdf.ln(3*pdf.font_size)
 

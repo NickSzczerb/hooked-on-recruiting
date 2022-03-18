@@ -181,7 +181,7 @@ def save_data():
 
 def click_validation():
     if len(skills1) < 5:
-        return st.error("Please choose 5 hard skills")
+        return st.error("Please choose 5 tech skills")
     elif len(skills2) < 5:
         return st.error("Please choose 5 soft skills")
     else:
@@ -219,13 +219,13 @@ if __name__ == '__main__':
         with st.spinner('Generating your predictions...'):
             results = run_model(txt_responsibilities)
             prob = merge_proba(results)
-        '''#### Your hard skills'''
+        '''#### Your tech skills'''
         fig1 = hard_skills_radar_chart(currentjob['hard_skills'])
         '''#### Your soft skills'''
         fig2 = soft_skills_radar_chart(currentjob['soft_skills'])
         '''### Your top 5 recommended jobs'''
         full_results = merge_proba(results).reset_index(drop=True)
-        st.table(pd.DataFrame({'Job titles':full_results['jobs'],'Prediction Score':(round(full_results['values']*1000,1))}))
+        st.table(pd.DataFrame({'Job titles':full_results['jobs'],'Prediction Score':(round(full_results['values']*1000,1).astype(int))}))
 
         wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
         #save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
