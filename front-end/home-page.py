@@ -73,7 +73,7 @@ def softskillsparse(value,i):
     except:
         return f"Soft Skill Nº{i+1}"
 
-'''### Rate your hard skills'''
+'''### Rate your tech skills'''
 
 skills1 = st.multiselect('Choose your top 5 tech skills',hard_skill_list)
 
