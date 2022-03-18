@@ -75,7 +75,7 @@ def softskillsparse(value,i):
 
 '''### Rate your hard skills'''
 
-skills1 = st.multiselect('Choose your top 5 hard skills',hard_skill_list)
+skills1 = st.multiselect('Choose your top 5 tech skills',hard_skill_list)
 
 columnsHardSkills = st.columns(5)
 
