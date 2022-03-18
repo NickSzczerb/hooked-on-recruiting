@@ -13,11 +13,11 @@ def hard_skills_radar_chart(hard_skills):
         'hard_skills': list(hard_skills.keys()),#['C#','PySpark','Html','.Net','Pandas'],
         'ratings' : list(hard_skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
     }
-     
+
     df = pd.DataFrame(data)
     fig1 = px.line_polar(df, r='ratings',
-                        range_r = [0, 10], 
-                        theta='hard_skills', 
+                        range_r = [0, 10],
+                        theta='hard_skills',
                         line_close=True)
     fig1.update_traces(fill='toself')
 
@@ -32,10 +32,10 @@ def soft_skills_radar_chart(soft_skills):
         'soft_skills': list(soft_skills.keys()),#['Communication','Persuasion','Openness to criticism','Leadership'],
         'ratings' : list(soft_skills.values())#[float(4), float(8.5), float(5), float(7), float(8.5)]
     }
-     
+
     df = pd.DataFrame(data)
     fig2 = px.line_polar(df, r='ratings',
-                            range_r = [0, 10], 
+                            range_r = [0, 10],
                             theta='soft_skills',
                             line_close=True)
     fig2.update_traces(fill='toself')
@@ -49,7 +49,7 @@ def soft_skills_radar_chart(soft_skills):
 def applicant_keyword_cloud(applicant_input):
     wordcloud = WordCloud(    background_color='white',
                               #stopwords=20,
-                              max_font_size=40, 
+                              max_font_size=40,
                               random_state=42
                              ).generate(applicant_input)
     print(wordcloud)
@@ -89,18 +89,18 @@ def save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, coun
     pdf.image('front-end/HookedOnRecruitingLogo.png', 10,8,20)
     pdf.ln(2*pdf.font_size)
     pdf.set_font('Times','B',15.0)
-    # User informations 
+    # User informations
     pdf.cell(epw, 0.0, f'{full_name} from {country}', align = 'C')
     pdf.ln(2*pdf.font_size)
     pdf.cell(epw, 0.0, f'{title1} since the {date1}', align = 'C')
     pdf.ln(2*pdf.font_size)
     col_width = epw/12
 
-    #fpdf.multi_cell(w: float, h: float, txt: str, border = 0, 
+    #fpdf.multi_cell(w: float, h: float, txt: str, border = 0,
                 #align: str = 'J', fill: bool = False)
 
     pdf.ln(3*pdf.font_size)
-    pdf.set_font('Times','B',13.0) 
+    pdf.set_font('Times','B',13.0)
     pdf.cell(epw, 0.0, '                    Your five main Hard Skills                                 Your five main Soft Skills')
     pdf.ln(24.75*pdf.font_size)
     pdf.cell(epw, 0.0, '                        The most salient words')
@@ -129,7 +129,7 @@ def save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, coun
     for row in data:
         for x,y in enumerate(row):
             # Enter data in colums
-            # Notice the use of the function str to coerce any input to the 
+            # Notice the use of the function str to coerce any input to the
             # string type. This is needed
             # since pyFPDF expects a string, not a number.
             if x == 0:
@@ -139,15 +139,10 @@ def save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, coun
                 pdf.cell(col_width, pdf.font_size*1.30, str(y), border=1, ln=1, align = 'C')
 
 
-    #pdf.multi_cell(col_width, pdf.font_size, str(datum), border=1) 
+    #pdf.multi_cell(col_width, pdf.font_size, str(datum), border=1)
     # Line break equivalent to 4 lines
 
     st.download_button(
-        "Save as PDF",
+        "Generate your PDF",
         data=pdf.output(dest='S').encode('latin-1'),
         file_name="Your Job Matching Report.pdf")
-
-
-
-
-

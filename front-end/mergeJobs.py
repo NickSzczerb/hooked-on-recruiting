@@ -11,6 +11,6 @@ def merge_proba(response):
         left_on='jobs',
         right_on='Title_final_category',
         how='inner').drop(columns=['Title_final_category'])
-
+    df_result = df_result[['values', 'jobs']]
     df_result = df_result.sort_values(by='values', ascending=False).head(5)
     return df_result

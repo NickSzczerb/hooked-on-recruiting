@@ -187,7 +187,7 @@ def click_validation():
     else:
         return save_data()
 
-button_save = st.button('Click to save')
+button_save = st.button('Click to save you data')
 
 
 if __name__ == '__main__':
@@ -223,16 +223,22 @@ if __name__ == '__main__':
         fig1 = hard_skills_radar_chart(currentjob['hard_skills'])
         '''#### Your soft skills'''
         fig2 = soft_skills_radar_chart(currentjob['soft_skills'])
-        '''### Recommendations'''
-
-        st.write(merge_proba(results))
+        '''### Your top 5 recommended jobs'''
+        full_results = merge_proba(results).reset_index(drop=True)
+        st.table(pd.DataFrame({'Job titles':full_results['jobs'],'Prediction Score':(round(full_results['values']*1000,1))}))
 
         wordcloud_fig = applicant_keyword_cloud(txt_responsibilities)
         #save_pdf(fig, wordcloud_fig, title_keyword_fig, currentjob['skills'])
         title_keyword_fig = job_title_keyword(pd.DataFrame(results['keywords']))
 
-        '''### List of keywords associated with your profile'''
-        st.write(pd.DataFrame(results['keywords']))
+        '''### List of keywords from your responsibilities and accomplishments'''
+        kw_table = pd.DataFrame(results['keywords']).rename(columns={
+            0: 'Keywords',
+            1: 'Relevancy Score'
+        })
+        st.table(
+            kw_table.sort_values(by='Relevancy Score',
+                                 ascending=False).reset_index(drop=True))
 
         save_pdf(fig1, fig2, wordcloud_fig, title_keyword_fig, prob, full_name, country, title1, date1)
 
